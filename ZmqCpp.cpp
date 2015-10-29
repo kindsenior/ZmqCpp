@@ -3,14 +3,20 @@
 
 #include "stdafx.h"
 #include <zmq.h>
+#include <string.h>
 
-struct COORDINATE{
+struct POINT3D{
 	int x;
 	int y;
 	int z;
-	int u;
-	int v;
-	int w;
+};
+typedef POINT3D point;
+
+struct COORDINATE{
+	int id;
+	//std::string name;
+	point p;
+	char name[10];
 };
 typedef COORDINATE coordinate;
 
@@ -46,12 +52,12 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	// while(1){
 	for (int i = 0; i < 50000; ++i){
-		// // buffer
-		// zmq_send(publisher, "Hello", 5, 0);
-
-		//coord1->x = 0x89; coord1->y = 0x45; coord1->z = 0x23;
-		coord1->x = 10; coord1->y = 20; coord1->z = 30; coord1->u = 40; coord1->v = 50; coord1->w = 60;
-		coord2->x = 20; coord2->y = 30;
+		coord1->id = 1;
+		strcpy(coord1->name,"1234567890");
+		coord1->p.x = 10; coord1->p.y = 20; coord1->p.z = 30;
+		coord2->id = 2;
+		strcpy(coord2->name, "arm");
+		coord2->p.x = 12; coord2->p.y = 34; coord2->p.z = 56;
 
 		// msg
 		zmq_msg_t msg;
@@ -63,6 +69,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		zmq_msg_init_size(&msg1, sizeof(*coord2));
 		memcpy(zmq_msg_data(&msg1), coord2, sizeof(*coord2));
 		zmq_msg_send(&msg1, publisher, ZMQ_DONTWAIT);
+
 
 	}
 	free(coord1);
